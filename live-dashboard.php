@@ -65,9 +65,11 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             require_once ( LIVE_DASHBOARD_DIR . 'lib/live-admin/live-admin.php' );
             $this->settings = new WP_LiveAdmin_Settings( 'dashboard', __('Live Dashboard', 'live-dashboard'), __('Combine browsing and administring your website with your full dashboard in a sidebar to your website','live-dashboard'), 'false', 'index.php' );
 
-            if ( $this->settings->is_active() )
+            $this->maybe_set_as_default();
+
+            if ( $this->settings->is_active() ) {
                 require ( LIVE_DASHBOARD_DIR . 'live-dashboard-template.php' );
-            else
+            } elseif ( ! $this->settings->is_default() )
                 add_action ( 'wp_dashboard_setup', array ( &$this, 'add_dashboard_widget' ) );
         }
 
@@ -79,6 +81,16 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             public function WP_LiveAdmin() {
                 $this->__construct ();
             }
+
+        protected function maybe_set_as_default() {
+            if ( isset ( $_POST['set_as_default'] ) ) {
+                if ( ! wp_verify_nonce( $_POST['set_as_default'], 'live_dashboard_set_as_default' ) )
+                    wp_die();
+
+                $this->settings->save_user_setting( 'dashboard', 'true');
+                wp_redirect( admin_url() );
+            }
+        }
 
         public function add_dashboard_widget() {
             wp_add_dashboard_widget( 'dashboard_live_dash', __( 'Live Dashboard', 'live-dashboard' ), array ( &$this, 'dashboard_widget' ) );
@@ -107,10 +119,18 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
         }
 
         public function dashboard_widget() {
+            $switch_url = $this->settings->switch_url();
+            $set_as_default_url = esc_html( add_query_arg( 'set_as_default', wp_create_nonce( 'live_dashboard_set_as_default' ) ) );
+
             ?>
             <p>Welcome to your WordPress dashboard. You have installed Live Dashboard, but not set it as your default dashboard. Using Live Dashboard you can conveniently access your WP admin while browsing your site.</p>
-            <div style="float:right"><a href="<?php echo $this->settings->switch_url() ?>">Try it first</a>
-            <a href="#" class="button-primary">Set as Default</a></div>
+            <div style="float:right">
+                <a href="<?php echo $switch_url ?>">Try it first</a>
+                <form method="post" style='display:inline'>
+                    <?php wp_nonce_field ( 'live_dashboard_set_as_default', 'set_as_default' ); ?>
+                    <input type="submit" class="button-primary" value="Set as Default">
+                </form>
+            </div>
             <div class="clear"></div>
             <?php
         }
