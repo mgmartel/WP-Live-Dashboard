@@ -1,10 +1,10 @@
 <?php
 /*
   Plugin Name: Live Dashboard
-  Plugin URI: http://trenvo.com
-  Description: Description
+  Plugin URI: http://trenvo.com/wordpress-live-dashboard
+  Description: Add the full flexibility of the WordPress Dashboard to the front end.
   Version: 0.1
-  Author: Mike
+  Author: Mike Martel
   Author URI: http://trenvo.com
  */
 
@@ -56,7 +56,7 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
          * @since 0.1
          */
         public function __construct() {
-            if ( !is_user_logged_in () || is_network_admin() )
+            if ( !is_user_logged_in () )
                 return;
 
             /**
@@ -64,6 +64,10 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
              */
             require_once ( LIVE_DASHBOARD_DIR . 'lib/live-admin/live-admin.php' );
             $this->settings = new WP_LiveAdmin_Settings( 'dashboard', __('Live Dashboard', 'live-dashboard'), __('Combine browsing and administring your website with your full dashboard in a sidebar to your website','live-dashboard'), 'false', 'index.php' );
+
+            // The settings screen is the only business @ network admin
+            if (is_network_admin() )
+                return
 
             $this->maybe_set_as_default();
 
