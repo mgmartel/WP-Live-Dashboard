@@ -56,7 +56,7 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
          * @since 0.1
          */
         public function __construct() {
-            if ( !is_user_logged_in () )
+            if ( !is_user_logged_in () || is_network_admin() )
                 return;
 
             /**
