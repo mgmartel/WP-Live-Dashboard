@@ -2,7 +2,7 @@
 /*
   Plugin Name: Live Dashboard
   Plugin URI: http://trenvo.com/wordpress-live-dashboard
-  Description: Add the full flexibility of the WordPress Dashboard to the front end.
+  Description: Manage your website while you're browsing it.
   Version: 0.1
   Author: Mike Martel
   Author URI: http://trenvo.com
