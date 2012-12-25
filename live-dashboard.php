@@ -67,7 +67,7 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
 
             // The settings screen is the only business @ network admin
             if (is_network_admin() )
-                return
+                return;
 
             $this->maybe_set_as_default();
 
@@ -127,7 +127,7 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             $set_as_default_url = esc_html( add_query_arg( 'set_as_default', wp_create_nonce( 'live_dashboard_set_as_default' ) ) );
 
             ?>
-            <p>Welcome to your WordPress dashboard. You have installed Live Dashboard, but not set it as your default dashboard. Using Live Dashboard you can conveniently access your WP admin while browsing your site.</p>
+            <p><?php _e('Welcome to your WordPress dashboard. You have installed Live Dashboard, but not set it as your default dashboard. Using Live Dashboard you can conveniently access your WP admin while browsing your site.'); ?></p>
             <div style="float:right">
                 <a href="<?php echo $switch_url ?>">Try it first</a>
                 <form method="post" style='display:inline'>
