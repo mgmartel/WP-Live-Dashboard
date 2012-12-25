@@ -31,11 +31,15 @@ if ( ! class_exists ( 'WP_LiveDashboard_Template' ) ) :
                     );
 
             $this->info_notice = sprintf( __( 'You are administring %s', 'live-admin' ), '<strong class="site-name">' . get_bloginfo('name') . '</strong>' );
+            $quick_action = '';
+            if ( post_type_exists( 'post' ) ) $quick_action .= '<li class="left-gray"><a href="' . admin_url ('post-new.php') . '"><div id="icon-edit" class="icon32"></div>New Post</a></li>';
+            if ( post_type_exists( 'page' ) ) $quick_action .= '<li class="right-gray"><a href="' . admin_url ('post-new.php?post_type=page') . '"><div id="icon-edit-pages" class="icon32"></div>Add Page</a></li>';
+
             $this->info_content =
-                        '<ul class="quick-actions">
-                            <li class="left-gray"><a href="' . admin_url ('post-new.php') . '"><div id="icon-edit" class="icon32"></div>New Post</a></li>
-                            <li class="right-gray"><a href="' . admin_url ('post-new.php?post_type=page') . '"><div id="icon-edit-pages" class="icon32"></div>Add Page</a></li>
-                        </ul>
+                        '<ul class="quick-actions">' . $quick_action .
+                            //<li class="left-gray"><a href="' . admin_url ('post-new.php') . '"><div id="icon-edit" class="icon32"></div>New Post</a></li>
+                            //<li class="right-gray"><a href="' . admin_url ('post-new.php?post_type=page') . '"><div id="icon-edit-pages" class="icon32"></div>Add Page</a></li>
+                        '</ul>
 
                         <div>
                             <a href="' . $this->switch_url() . '" style="float:left">Switch interface</a>
