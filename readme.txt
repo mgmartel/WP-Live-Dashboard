@@ -35,3 +35,11 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 == Screenshots ==
 
 1. Live Dashboard in action
+
+== Changelog ==
+
+= 0.2 =
+* Fix in loading of language files
+
+= 0.1 =
+* Initial release

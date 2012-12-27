@@ -43,7 +43,7 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             global $live_dashboard;
 
             if ( ! $live_dashboard ) {
-                load_plugin_textdomain ( 'live-dashboard', false, LIVE_DASHBOARD_DIR . '/languages/' );
+                load_plugin_textdomain ( 'live-dashboard', false, basename ( LIVE_DASHBOARD_DIR ) . '/languages/' );
                 $live_dashboard = new WP_LiveDashboard;
             }
 
