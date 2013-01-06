@@ -32,6 +32,8 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
     class WP_LiveDashboard
     {
 
+        protected $dont_change_home_url = false;
+
         /**
          * Creates an instance of the WP_LiveAdmin class
          *
@@ -61,11 +63,6 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             }
         }
 
-        public static function change_home_url ( $url, $path ) {
-            $url = add_query_arg ( array ( "current-page" => urlencode ( $path ) ), admin_url() );
-            return $url;
-        }
-
         /**
          * Constructor
          *
@@ -81,8 +78,13 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             require_once ( LIVE_DASHBOARD_DIR . 'lib/live-admin/live-admin.php' );
             $this->settings = new WP_LiveAdmin_Settings( 'dashboard', __('Live Dashboard', 'live-dashboard'), __('Combine browsing and administring your website with your full dashboard in a sidebar to your website','live-dashboard'), 'false', 'index.php' );
 
-            if ( $this->settings->is_default() )
-                add_filter('home_url', array ( 'WP_LiveDashboard', 'change_home_url' ), 10, 2 );
+            if ( $this->settings->is_default() ) {
+                wp_enqueue_script( 'live-dashboard-links', LIVE_DASHBOARD_INC_URL . 'js/live-dashboard-links.js', array ('jquery'), 0.1, true );
+                wp_localize_script( 'live-dashboard-links', 'liveDashboardLinks', array(
+                    "site_url"  => get_bloginfo('wpurl'),
+                    "admin_url" => admin_url()
+                ));
+            }
 
             // The settings screen is the only business @ network admin
             if (is_network_admin() )
