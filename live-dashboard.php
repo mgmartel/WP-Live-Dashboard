@@ -3,7 +3,7 @@
   Plugin Name: Live Dashboard
   Plugin URI: http://trenvo.com/wordpress-live-dashboard
   Description: Manage your website while you're browsing it.
-  Version: 0.1
+  Version: 0.1.1
   Author: Mike Martel
   Author URI: http://trenvo.com
  */
@@ -17,7 +17,7 @@ if ( !defined ( 'ABSPATH' ) )
  *
  * @since 0.1
  */
-define ( 'LIVE_DASHBOARD_VERSION', '0.1' );
+define ( 'LIVE_DASHBOARD_VERSION', '0.1.1' );
 
 /**
  * PATHs and URLs
@@ -51,6 +51,17 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
         }
 
         /**
+         * Separate loader for front-end actions
+         *
+         * @since 0.1.1
+         */
+        public static function &frontend_init() {
+            if ( is_admin_bar_showing() && ! is_admin() ) {
+                add_filter('admin_url', array ( 'WP_LiveDashboard', 'change_admin_link' ), 10, 2 );
+            }
+        }
+
+        /**
          * Constructor
          *
          * @since 0.1
@@ -81,7 +92,7 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
              * PHP4
              *
              * @since 0.1
-                 */
+             */
             public function WP_LiveAdmin() {
                 $this->__construct ();
             }
@@ -139,7 +150,21 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             <?php
         }
 
-    }
+        /**
+         * Changes all requests for admin_link (without param)
+         * to include a request param for current-page
+         *
+         * @param str $url
+         * @param str $path
+         * @return str
+         */
+        public static function change_admin_link( $url, $path ) {
+            if ( empty ( $path ) && empty( $GLOBALS['_wp_switched_stack'] ) )
+                $url = add_query_arg ( array ( "current-page" => urlencode ( substr ( $_SERVER['REQUEST_URI'], 1 ) ) ),$url);
+            return $url;
+        }
 
+    }
     add_action ( 'admin_init', array ( 'WP_LiveDashboard', 'init' ), 999 );
+    add_action ( 'init', array ( 'WP_LiveDashboard', 'frontend_init') );
 endif;
