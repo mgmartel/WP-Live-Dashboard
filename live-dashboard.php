@@ -111,7 +111,12 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
                     wp_die();
 
                 $this->settings->save_user_setting( 'dashboard', 'true');
-                wp_redirect( admin_url() );
+
+                $url = admin_url();
+                if ( isset ( $_REQUEST['current-page'] ) && ! empty ( $_REQUEST['current-page'] ) ) {
+                    $url = add_query_arg ( array ( "current-page" =>  $_REQUEST['current-page'] ), $url );
+                }
+                wp_redirect( $url );
             }
         }
 
@@ -143,7 +148,6 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
 
         public function dashboard_widget() {
             $switch_url = $this->settings->switch_url();
-            $set_as_default_url = esc_html( add_query_arg( 'set_as_default', wp_create_nonce( 'live_dashboard_set_as_default' ) ) );
 
             ?>
             <p><?php _e('Welcome to your WordPress dashboard. You have installed Live Dashboard, but not set it as your default dashboard. Using Live Dashboard you can conveniently access your WP admin while browsing your site.', 'live-dashboard'); ?></p>
@@ -151,6 +155,11 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
                 <a href="<?php echo $switch_url ?>">Try it first</a>
                 <form method="post" style='display:inline'>
                     <?php wp_nonce_field ( 'live_dashboard_set_as_default', 'set_as_default' ); ?>
+
+                    <?php if ( isset ( $_REQUEST['current-page'] ) && !empty( $_REQUEST['current-page'] ) ) : ?>
+                        <input type="hidden" name="current-page" value="<?php echo $_REQUEST['current-page'] ?>">
+                    <?php endif; ?>
+
                     <input type="submit" class="button-primary" value="Set as Default">
                 </form>
             </div>
