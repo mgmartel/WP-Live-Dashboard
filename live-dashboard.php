@@ -61,6 +61,11 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             }
         }
 
+        public static function change_home_url ( $url, $path ) {
+            $url = add_query_arg ( array ( "current-page" => urlencode ( $path ) ), admin_url() );
+            return $url;
+        }
+
         /**
          * Constructor
          *
@@ -75,6 +80,9 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
              */
             require_once ( LIVE_DASHBOARD_DIR . 'lib/live-admin/live-admin.php' );
             $this->settings = new WP_LiveAdmin_Settings( 'dashboard', __('Live Dashboard', 'live-dashboard'), __('Combine browsing and administring your website with your full dashboard in a sidebar to your website','live-dashboard'), 'false', 'index.php' );
+
+            if ( $this->settings->is_default() )
+                add_filter('home_url', array ( 'WP_LiveDashboard', 'change_home_url' ), 10, 2 );
 
             // The settings screen is the only business @ network admin
             if (is_network_admin() )
@@ -159,7 +167,10 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
          * @return str
          */
         public static function change_admin_link( $url, $path ) {
-            if ( empty ( $path ) && empty( $GLOBALS['_wp_switched_stack'] ) )
+            if ( empty ( $path )
+                    && empty( $GLOBALS['_wp_switched_stack'] )
+                    && strlen ( $_SERVER['REQUEST_URI'] ) > 1
+                )
                 $url = add_query_arg ( array ( "current-page" => urlencode ( substr ( $_SERVER['REQUEST_URI'], 1 ) ) ),$url);
             return $url;
         }

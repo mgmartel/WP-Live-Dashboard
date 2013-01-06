@@ -4,9 +4,7 @@ if ( !defined ( 'ABSPATH' ) )
     exit;
 
 if ( ! class_exists ( 'WP_LiveDashboard_Template' ) ) :
-    /**
-     * @todo remember collapsed state
-     */
+
     class WP_LiveDashboard_Template extends WP_LiveAdmin
     {
 
@@ -14,7 +12,7 @@ if ( ! class_exists ( 'WP_LiveDashboard_Template' ) ) :
             if ( isset ( $_REQUEST['current-page' ] ) && ! empty ( $_REQUEST['current-page' ] ) ) {
                 $iframe_url = $_REQUEST['current-page'];
                 if ( ! strpos ( $iframe_url, get_bloginfo('url') ) )
-                    $iframe_url = get_bloginfo('url') . '/' . $iframe_url;
+                    $iframe_url = get_bloginfo('wpurl') . '/' . $iframe_url;
 
                 $this->iframe_url = $iframe_url;
             }
