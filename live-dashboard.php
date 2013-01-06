@@ -150,6 +150,7 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             $switch_url = $this->settings->switch_url();
 
             ?>
+            <a href="http://wordpress.org/extend/plugins/live-dashboard/" target="_new"><img src="<?php echo LIVE_DASHBOARD_INC_URL . 'images/dashboard_logo.png'; ?>" style="float:left;margin-right:10px;width:84px;height:84px;"></a>
             <p><?php _e('Welcome to your WordPress dashboard. You have installed Live Dashboard, but not set it as your default dashboard. Using Live Dashboard you can conveniently access your WP admin while browsing your site.', 'live-dashboard'); ?></p>
             <div style="float:right">
                 <a href="<?php echo $switch_url ?>">Try it first</a>
