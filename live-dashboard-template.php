@@ -11,6 +11,14 @@ if ( ! class_exists ( 'WP_LiveDashboard_Template' ) ) :
     {
 
         public function __construct() {
+            if ( isset ( $_REQUEST['current-page' ] ) && ! empty ( $_REQUEST['current-page' ] ) ) {
+                $iframe_url = $_REQUEST['current-page'];
+                if ( ! strpos ( $iframe_url, get_bloginfo('url') ) )
+                    $iframe_url = get_bloginfo('url') . '/' . $iframe_url;
+
+                $this->iframe_url = $iframe_url;
+            }
+
             $this->menu = true;
             $this->screen_options = true;
             $this->remember_sidebar_state = true;
