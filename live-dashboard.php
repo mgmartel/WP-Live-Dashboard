@@ -3,7 +3,7 @@
   Plugin Name: Live Dashboard
   Plugin URI: http://trenvo.com/wordpress-live-dashboard
   Description: Manage your website while you're browsing it.
-  Version: 0.1.1
+  Version: 0.1.3
   Author: Mike Martel
   Author URI: http://trenvo.com
  */
@@ -17,7 +17,7 @@ if ( !defined ( 'ABSPATH' ) )
  *
  * @since 0.1
  */
-define ( 'LIVE_DASHBOARD_VERSION', '0.1.1' );
+define ( 'LIVE_DASHBOARD_VERSION', '0.1.3' );
 
 /**
  * PATHs and URLs
@@ -31,6 +31,8 @@ define ( 'LIVE_DASHBOARD_INC_URL', LIVE_DASHBOARD_URL . '_inc/' );
 if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
     class WP_LiveDashboard
     {
+
+        protected $dont_change_home_url = false;
 
         /**
          * Creates an instance of the WP_LiveAdmin class
@@ -61,11 +63,6 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             }
         }
 
-        public static function change_home_url ( $url, $path ) {
-            $url = add_query_arg ( array ( "current-page" => urlencode ( $path ) ), admin_url() );
-            return $url;
-        }
-
         /**
          * Constructor
          *
@@ -81,8 +78,13 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             require_once ( LIVE_DASHBOARD_DIR . 'lib/live-admin/live-admin.php' );
             $this->settings = new WP_LiveAdmin_Settings( 'dashboard', __('Live Dashboard', 'live-dashboard'), __('Combine browsing and administring your website with your full dashboard in a sidebar to your website','live-dashboard'), 'false', 'index.php' );
 
-            if ( $this->settings->is_default() )
-                add_filter('home_url', array ( 'WP_LiveDashboard', 'change_home_url' ), 10, 2 );
+            if ( $this->settings->is_default() ) {
+                wp_enqueue_script( 'live-dashboard-links', LIVE_DASHBOARD_INC_URL . 'js/live-dashboard-links.js', array ('jquery'), 0.1, true );
+                wp_localize_script( 'live-dashboard-links', 'liveDashboardLinks', array(
+                    "site_url"  => get_bloginfo('wpurl'),
+                    "admin_url" => admin_url()
+                ));
+            }
 
             // The settings screen is the only business @ network admin
             if (is_network_admin() )
@@ -111,7 +113,12 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
                     wp_die();
 
                 $this->settings->save_user_setting( 'dashboard', 'true');
-                wp_redirect( admin_url() );
+
+                $url = admin_url();
+                if ( isset ( $_REQUEST['current-page'] ) && ! empty ( $_REQUEST['current-page'] ) ) {
+                    $url = add_query_arg ( array ( "current-page" =>  $_REQUEST['current-page'] ), $url );
+                }
+                wp_redirect( $url );
             }
         }
 
@@ -143,14 +150,19 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
 
         public function dashboard_widget() {
             $switch_url = $this->settings->switch_url();
-            $set_as_default_url = esc_html( add_query_arg( 'set_as_default', wp_create_nonce( 'live_dashboard_set_as_default' ) ) );
 
             ?>
+            <a href="http://wordpress.org/extend/plugins/live-dashboard/" target="_new"><img src="<?php echo LIVE_DASHBOARD_INC_URL . 'images/dashboard_logo.png'; ?>" style="float:left;margin-right:10px;width:84px;height:84px;"></a>
             <p><?php _e('Welcome to your WordPress dashboard. You have installed Live Dashboard, but not set it as your default dashboard. Using Live Dashboard you can conveniently access your WP admin while browsing your site.', 'live-dashboard'); ?></p>
             <div style="float:right">
                 <a href="<?php echo $switch_url ?>">Try it first</a>
                 <form method="post" style='display:inline'>
                     <?php wp_nonce_field ( 'live_dashboard_set_as_default', 'set_as_default' ); ?>
+
+                    <?php if ( isset ( $_REQUEST['current-page'] ) && !empty( $_REQUEST['current-page'] ) ) : ?>
+                        <input type="hidden" name="current-page" value="<?php echo $_REQUEST['current-page'] ?>">
+                    <?php endif; ?>
+
                     <input type="submit" class="button-primary" value="Set as Default">
                 </form>
             </div>
