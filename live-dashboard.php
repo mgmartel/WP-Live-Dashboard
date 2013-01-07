@@ -17,7 +17,7 @@ if ( !defined ( 'ABSPATH' ) )
  *
  * @since 0.1
  */
-define ( 'LIVE_DASHBOARD_VERSION', '0.1.3' );
+define ( 'LIVE_DASHBOARD_VERSION', '0.2' );
 
 /**
  * PATHs and URLs
