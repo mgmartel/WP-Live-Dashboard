@@ -38,6 +38,11 @@
         };
         ajaxPopulateWidgets();
 
+        $('.customize-section-title .postbox-title-action a').click( function(e) {
+            var link = liveAdmin_addCurrentPageParam( $(this).attr('href') );
+            $(this).attr('href', link );
+        });
+
     });
 
 })(jQuery);
