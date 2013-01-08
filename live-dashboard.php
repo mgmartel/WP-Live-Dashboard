@@ -137,7 +137,7 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             // Backup and delete our new dashbaord widget from the end of the array
 
             $dashboard_live_dash_backup = array('dashboard_live_dash' => $wp_meta_boxes['dashboard']['normal']['core']['dashboard_live_dash']);
-            unset($normal_dashboard['dashboard_live_dash']);
+            unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_live_dash']);
 
             // Merge the two arrays together so our widget is at the beginning
 
