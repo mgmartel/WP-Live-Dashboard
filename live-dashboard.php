@@ -78,7 +78,7 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             require_once ( LIVE_DASHBOARD_DIR . 'lib/live-admin/live-admin.php' );
             $this->settings = new WP_LiveAdmin_Settings( 'dashboard', __('Live Dashboard', 'live-dashboard'), __('Combine browsing and administring your website with your full dashboard in a sidebar to your website','live-dashboard'), 'false', 'index.php' );
 
-            if ( $this->settings->is_default() ) {
+            if ( $this->settings->is_default() && !is_network_admin() ) {
                 wp_enqueue_script( 'live-dashboard-links', LIVE_DASHBOARD_INC_URL . 'js/live-dashboard-links.js', array ('jquery'), 0.1, true );
                 wp_localize_script( 'live-dashboard-links', 'liveDashboardLinks', array(
                     "site_url"  => get_bloginfo('wpurl'),

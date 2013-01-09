@@ -40,6 +40,9 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 
 == Changelog ==
 
+= 0.2.2 =
+* Fix: don't interfere network admin links
+
 = 0.2.1 =
 * Fix that two dashboard widgets would show up (thanks Blogurp)
 * Allow browsing within the same domain (so Live Dash is still visible when browsing subdomain multisite)
