@@ -92,12 +92,11 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
 
             $this->maybe_set_as_default();
 
-            if ( $this->settings->is_active() )
+            if ( $this->settings->is_active() ) {
+                require ( LIVE_DASHBOARD_DIR . 'lib/quick-menu/quick-menu.php');
                 require ( LIVE_DASHBOARD_DIR . 'live-dashboard-template.php' );
-            else
+            } else
                 add_action ( 'wp_dashboard_setup', array ( &$this, 'add_dashboard_widget' ) );
-//            else
-//                add_action ( 'wp_dashboard_setup', array ( &$this, 'add_dashboard_widget' ) );
         }
 
             /**
