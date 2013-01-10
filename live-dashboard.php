@@ -92,10 +92,12 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
 
             $this->maybe_set_as_default();
 
-            if ( $this->settings->is_active() ) {
+            if ( $this->settings->is_active() )
                 require ( LIVE_DASHBOARD_DIR . 'live-dashboard-template.php' );
-            } elseif ( ! $this->settings->is_default() )
+            else
                 add_action ( 'wp_dashboard_setup', array ( &$this, 'add_dashboard_widget' ) );
+//            else
+//                add_action ( 'wp_dashboard_setup', array ( &$this, 'add_dashboard_widget' ) );
         }
 
             /**
@@ -122,8 +124,15 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
             }
         }
 
+        public function add_switched_dashboard_widget() {
+            wp_add_dashboard_widget( 'dashboard_live_dash', __( 'Live Dashboard', 'live-dashboard' ), array ( &$this, 'switched_dashboard_widget' ) );
+        }
+
         public function add_dashboard_widget() {
-            wp_add_dashboard_widget( 'dashboard_live_dash', __( 'Live Dashboard', 'live-dashboard' ), array ( &$this, 'dashboard_widget' ) );
+            if ( $this->settings->is_default() )
+                wp_add_dashboard_widget( 'dashboard_live_dash', __( 'Live Dashboard', 'live-dashboard' ), array ( &$this, 'switched_dashboard_widget' ) );
+            else
+                wp_add_dashboard_widget( 'dashboard_live_dash', __( 'Live Dashboard', 'live-dashboard' ), array ( &$this, 'dashboard_widget' ) );
 
             // Globalize the metaboxes array, this holds all the widgets for wp-admin
 
@@ -165,6 +174,19 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
 
                     <input type="submit" class="button-primary" value="Set as Default">
                 </form>
+            </div>
+            <div class="clear"></div>
+            <?php
+        }
+
+        public function switched_dashboard_widget() {
+            $switch_url = $this->settings->switch_url();
+
+            ?>
+            <a href="http://wordpress.org/extend/plugins/live-dashboard/" target="_new"><img src="<?php echo LIVE_DASHBOARD_INC_URL . 'images/dashboard_logo.png'; ?>" style="float:left;margin-right:10px;width:84px;height:84px;"></a>
+            <p><?php _e('You have switched away from Live Dashboard. Click the button below to switch back.', 'live-dashboard'); ?></p>
+            <div style="float:right">
+                <a class="button-primary" href="<?php echo $switch_url ?>">Switch to Live Dashboard</a>
             </div>
             <div class="clear"></div>
             <?php
