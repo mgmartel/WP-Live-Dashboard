@@ -57,7 +57,7 @@ if ( ! class_exists ( 'WP_LiveDashboard' ) ) :
          *
          * @since 0.1.1
          */
-        public static function &frontend_init() {
+        public static function frontend_init() {
             if ( is_admin_bar_showing() && ! is_admin() ) {
                 add_filter('admin_url', array ( 'WP_LiveDashboard', 'change_admin_link' ), 10, 2 );
             }

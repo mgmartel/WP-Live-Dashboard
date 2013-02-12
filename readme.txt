@@ -42,6 +42,9 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 
 == Changelog ==
 
+= 0.3.1 =
+* Better Welcome Panel
+
 = 0.3 =
 * Added widget to switch back to Live Dashboard
 * Added extra quickmenu to the live dashboard
